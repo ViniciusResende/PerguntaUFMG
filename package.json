@@ -1,0 +1,25 @@
+{
+  "license": "MIT",
+  "scripts": {
+    "cspell": "cspell \"**/src/**\" --gitignore --no-progress --no-summary",
+    "sast": "semgrep --disable-version-check --error --config \"p/react\"",
+    "build": "(yarn); (cd ui/web && yarn build)",
+    "verify": "yarn -v",
+    "verify_old": "(yarn cspell) && (cd shared/lib && yarn verify) && (yarn sast ./)",
+    "postinstall": "(husky install); (cd shared/lib && yarn); (cd ui/web && yarn);"
+  },
+  "devDependencies": {
+    "@esbuild-plugins/node-modules-polyfill": "^0.2.2",
+    "@parcel/packager-ts": "^2.9.3",
+    "@parcel/transformer-typescript-types": "^2.9.3",
+    "@types/jest": "^29.5.3",
+    "chokidar": "^3.5.3",
+    "cross-env": "^7.0.3",
+    "cspell": "^7.0.0",
+    "husky": "^8.0.3",
+    "typescript": "^5.1.6"
+  },
+  "contributors": [
+    "Vinícius Alves de Faria Resende"
+  ]
+}

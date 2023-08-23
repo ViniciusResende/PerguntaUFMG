@@ -1,0 +1,21 @@
+$backgroundColor: #f8f8f8;
+$white: #fff;
+$black: #000;
+$primaryColor: #4eb1da;
+$primaryColorHover: #469bbe;
+$secondaryColor: #1f3748;
+$fontColor: #29292e;
+$supportLight: #dbdcdd;
+$supportLightHover: #cecece;
+$supportMedium: #a8a8b3;
+$supportDark: #737380;
+$textDisabled: #808080;
+$systemRed: #ce181e;
+$systemRedHover: #b8191f;
+
+/* Media queries sizes */
+$mq-xlarge: 'screen and (min-width: 1441px)';
+$mq-large: 'screen and (min-width: 1280px)';
+$mq-medium: 'screen and (max-width: 1278px)';
+$mq-small: 'screen and (max-width: 1024px)';
+$mq-xsmall: 'screen and (max-width: 480px)';

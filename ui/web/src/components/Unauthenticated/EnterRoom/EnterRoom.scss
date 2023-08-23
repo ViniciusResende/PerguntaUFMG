@@ -1,0 +1,41 @@
+@import '../../../styles/';
+
+.enter-room-page {
+  &__form-container {
+    width: 100%;
+    max-width: 20rem;
+  }
+
+  &__separator {
+    align-items: center;
+    color: $supportMedium;
+    display: flex;
+    font-size: 0.875rem;
+    margin: 2rem 0;
+
+    &::before {
+      background: $supportMedium;
+      content: '';
+      flex: 1;
+      height: 1px;
+      margin-right: 1rem;
+    }
+
+    &::after {
+      background: $supportMedium;
+      content: '';
+      flex: 1;
+      height: 1px;
+      margin-left: 1rem;
+    }
+  }
+
+  &__submit-area {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    width: 100%;
+  }
+}

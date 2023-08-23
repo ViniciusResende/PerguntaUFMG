@@ -1,0 +1,30 @@
+@import '../../../styles/';
+
+.create-room-page {
+  &__form-container {
+    width: 100%;
+    max-width: 20rem;
+  }
+
+  &__title {
+    font: 700 1.5rem 'Poppins', 'Roboto';
+    padding-bottom: 1px;
+    text-align: center;
+  }
+
+  &__submit-area {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    justify-content: center;
+    margin-top: 1.5rem;
+    width: 100%;
+  }
+
+  &__enter-room-message {
+    color: $supportDark;
+    font-size: 0.875rem;
+    text-align: center;
+  }
+}

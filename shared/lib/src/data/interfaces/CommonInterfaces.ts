@@ -14,7 +14,7 @@ export interface IClass<T> {
  * General configuration for the library.
  */
 export interface ILibConfiguration {
-  // To be Done
+  apiConfigObject?: unknown;
 }
 
 /**

@@ -10,3 +10,4 @@ export * from './data/types/CommonTypes';
 
 /** Interfaces  */
 export * from './data/interfaces/CommonInterfaces';
+export * from './data/interfaces/UserInterfaces';

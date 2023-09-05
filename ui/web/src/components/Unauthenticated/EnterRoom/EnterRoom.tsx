@@ -11,14 +11,18 @@ import './EnterRoom.scss';
 /** Assets */
 import { GoogleLogoIcon, LogInIcon } from '../../../assets/svg/icons';
 
-function EnterRoom() {
+type EnterRoomProps = {
+  createRoomRedirect: () => void;
+};
+
+function EnterRoom({ createRoomRedirect }: EnterRoomProps) {
   return (
     <section className="enter-room-page__form-container">
       <form onSubmit={() => {}}>
         <Button
           icon={<GoogleLogoIcon />}
           modifier="outlined"
-          onClick={() => {}}
+          onClick={createRoomRedirect}
           type="button"
         >
           Crie sua sala com o Google

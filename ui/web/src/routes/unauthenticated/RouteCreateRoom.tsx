@@ -15,7 +15,17 @@ import Lib from 'pergunta-UFMG-lib';
 function RouteCreateRoom() {
   const navigator = useNavigate();
 
-  return <CreateRoom />;
+  async function createRoom(roomTitle: string) {
+    let user = Lib.auth.authenticatedUser;
+
+    if (user === null) {
+      user = await Lib.auth.auth();
+
+      console.log('=>', user, roomTitle);
+    }
+  }
+
+  return <CreateRoom createRoom={createRoom} />;
 }
 
 /** Exports */

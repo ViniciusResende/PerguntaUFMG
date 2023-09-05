@@ -15,7 +15,11 @@ import Lib from 'pergunta-UFMG-lib';
 function RouteEnterRoom() {
   const navigator = useNavigate();
 
-  return <EnterRoom />;
+  function createRoomRedirect() {
+    navigator('/rooms/new');
+  }
+
+  return <EnterRoom createRoomRedirect={createRoomRedirect} />;
 }
 
 /** Exports */

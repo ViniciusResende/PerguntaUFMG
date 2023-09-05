@@ -7,21 +7,23 @@
  */
 
 /** Managers */
+import { AuthManager } from './manager/auth/AuthManager';
 
 /** Utilities */
+import { Utilities, UtilitiesClass } from './utils/Utilities';
 
 /**
  * Class that provides access to utilities and business rules' managers for
  * dealing with rooms and authorization.
  */
 export class PerguntaUFMGLib {
-  auth: any;
+  auth: AuthManager;
   room: any;
-  utils: any;
+  utils: UtilitiesClass;
 
   constructor() {
-    this.auth = {};
+    this.auth = new AuthManager();
     this.room = {};
-    this.utils = {};
+    this.utils = Utilities;
   }
 }

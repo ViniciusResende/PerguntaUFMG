@@ -12,6 +12,10 @@
     {
       "tagName": "@hidden",
       "syntaxKind": "modifier"
+    },
+    {
+      "tagName": "@fires",
+      "syntaxKind": "modifier"
     }
   ]
 }

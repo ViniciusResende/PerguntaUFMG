@@ -14,6 +14,7 @@ import { PubSub } from './classes/pubsub/PubSub';
 
 /** Services */
 import { Logging } from './services/logging/Logging';
+import { Notification } from './services/notification/Notification';
 
 /**
  * Bus to provide access to all utility services.
@@ -24,6 +25,7 @@ class Utilities extends PubSub {
   EVENTS: typeof UtilitiesEvents;
   pubSub: IClass<PubSub>;
   logging: Logging;
+  notification: Notification;
 
   constructor() {
     super();
@@ -31,6 +33,7 @@ class Utilities extends PubSub {
     this.EVENTS = UtilitiesEvents;
     this.pubSub = PubSub;
     this.logging = new Logging();
+    this.notification = new Notification();
   }
 
   /**

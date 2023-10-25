@@ -1,0 +1,59 @@
+@import '../../../../../styles/';
+
+.header-component {
+  border-bottom: 1px solid $lightGray;
+  padding: 1.5rem;
+
+  &__logo-wrapper {
+    cursor: pointer;
+    max-height: 2.82rem;
+
+    > svg {
+      height: 3.45rem;
+    }
+  }
+
+  &__side-buttons {
+    display: flex;
+    gap: 1rem;
+
+    > button {
+      font-size: 0.875rem;
+      height: 2.5rem;
+
+      &.header-component__close-room-btn {
+        border-color: $primaryColor;
+        color: $primaryColor;
+        padding: 0.75rem 1.5rem;
+
+        &:hover {
+          border-color: $primaryColorHover;
+          color: $primaryColorHover;
+        }
+      }
+    }
+  }
+
+  &__wrapper {
+    align-items: center;
+    display: flex;
+    justify-content: space-between;
+    margin: 0 auto;
+    max-width: 70rem;
+  }
+
+  @include forSmall() {
+    &__side-buttons {
+      flex-direction: column;
+    }
+  }
+  @include forXSmall() {
+    &__wrapper {
+      flex-direction: column;
+    }
+
+    &__logo-wrapper {
+      margin-bottom: 12px;
+    }
+  }
+}

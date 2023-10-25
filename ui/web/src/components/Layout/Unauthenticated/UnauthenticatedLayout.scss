@@ -19,6 +19,10 @@
     min-height: 100vh;
     width: 53%;
 
+    > svg {
+      height: 4.7rem;
+    }
+
     @include forXSmall() {
       padding: 0 1em;
     }

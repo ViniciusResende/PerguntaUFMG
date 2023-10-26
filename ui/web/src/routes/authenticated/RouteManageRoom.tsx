@@ -2,7 +2,7 @@
 import React from 'react';
 
 /** React components */
-import ManageRoom from '../../components/Authenticated/ManageRoom';
+import ManageRoom from '../../components/InRoom/ManageRoom';
 
 /** Library */
 import Lib from 'pergunta-UFMG-lib';

@@ -33,6 +33,10 @@ function RouteManageRoom() {
         avatar:
           'https://media.istockphoto.com/id/825383494/photo/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=',
       },
+      likeCount: 0,
+      isAnonymous: true,
+      isHighlighted: false,
+      isAnswered: true,
     },
   ];
 

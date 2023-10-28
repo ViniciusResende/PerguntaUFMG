@@ -1,0 +1,135 @@
+@import '../../../styles/';
+
+.room-page {
+  margin: 0 auto;
+  max-width: 50rem;
+
+  &__room-title {
+    align-items: center;
+    display: flex;
+    margin: 2rem 0 1.5rem;
+
+    > h1 {
+      color: $fontColor;
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.5rem;
+    }
+
+    > span {
+      background: $secondaryColor;
+      border-radius: 9999px;
+      color: $white;
+      font-size: 0.875rem;
+      font-weight: 500;
+      margin-left: 0.875rem;
+      padding: 0.5rem 0.94rem;
+    }
+  }
+
+  &__question-submit {
+    textarea {
+      width: 100%;
+      border: 0;
+      padding: 16px;
+      border-radius: 8px;
+      background: 0 2px 12px;
+      resize: vertical;
+      min-height: 130px;
+      background-color: $white;
+      color: $black;
+    }
+
+    .checkbox-container {
+      display: flex;
+      align-items: center;
+      position: relative;
+      padding-left: 0;
+      margin: 12px 0;
+      cursor: pointer;
+      font-size: 16px;
+      user-select: none;
+      color: $supportDark;
+
+      > p {
+        padding-left: 2rem;
+      }
+    }
+
+    .form-footer {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-top: 16px;
+
+      .user-info {
+        display: flex;
+        align-items: center;
+
+        img {
+          width: 32px;
+          height: 32px;
+          border-radius: 50%;
+        }
+
+        span {
+          margin-left: 8px;
+          color: $fontColor;
+          font-size: 14px;
+          font-weight: 500;
+        }
+      }
+
+      > span {
+        font-size: 14px;
+        color: $supportDark;
+        font-weight: 500;
+
+        button {
+          background: transparent;
+          border: 0;
+          color: $primaryColor;
+          text-decoration: underline;
+          font-size: 14px;
+          font-weight: 500;
+
+          cursor: pointer;
+        }
+      }
+
+      > button {
+        max-width: 12.5rem;
+      }
+    }
+  }
+
+  &__questions {
+    margin: 2rem 0;
+  }
+
+  &__no-questions {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    margin-top: 6rem;
+
+    svg {
+      max-width: 20rem;
+      width: 100%;
+    }
+
+    > strong {
+      font-family: 'Poppins', sans-serif;
+      font-size: 1.125rem;
+    }
+
+    > span {
+      color: $supportDark;
+      font-size: 0.875rem;
+      line-height: 1.3rem;
+      margin-top: 1rem;
+      max-width: 17.75rem;
+      text-align: center;
+    }
+  }
+}

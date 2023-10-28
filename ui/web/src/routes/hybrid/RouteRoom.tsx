@@ -2,7 +2,7 @@
 import React from 'react';
 
 /** React components */
-import ManageRoom from '../../components/InRoom/ManageRoom';
+import Room from '../../components/InRoom/Room';
 
 /** Library */
 import Lib from 'pergunta-UFMG-lib';
@@ -11,19 +11,7 @@ import Lib from 'pergunta-UFMG-lib';
 
 /** Enums */
 
-function RouteManageRoom() {
-  function checkQuestion(id: string) {
-    console.log(id);
-  }
-
-  function deleteQuestion(id: string) {
-    console.log(id);
-  }
-
-  function highlightQuestion(id: string) {
-    console.log(id);
-  }
-
+function RouteRoom() {
   const mockQuestions = [
     {
       id: '1',
@@ -33,23 +21,29 @@ function RouteManageRoom() {
         avatar:
           'https://media.istockphoto.com/id/825383494/photo/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=',
       },
-      likeCount: 0,
-      isAnonymous: true,
+      likeCount: 10,
+      isAnonymous: false,
       isHighlighted: false,
-      isAnswered: true,
+      isAnswered: false,
     },
   ];
 
   return (
-    <ManageRoom
+    <Room
       questions={mockQuestions}
+      user={{
+        id: '1',
+        name: 'Vinícius Alves',
+        avatar:
+          'https://media.istockphoto.com/id/825383494/photo/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=',
+      }}
+      roomClosed={false}
       title="Sala React Q&A"
-      checkQuestion={checkQuestion}
-      deleteQuestion={deleteQuestion}
-      highlightQuestion={highlightQuestion}
+      sendQuestion={() => {}}
+      toggleQuestionLike={() => {}}
     />
   );
 }
 
 /** Exports */
-export default RouteManageRoom;
+export default RouteRoom;

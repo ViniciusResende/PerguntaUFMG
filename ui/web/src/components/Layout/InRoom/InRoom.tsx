@@ -6,14 +6,14 @@ import { Outlet } from 'react-router-dom';
 import Header from './elements/Header/Header';
 
 /** Styles */
-import './AuthenticatedLayout.scss';
+import './InRoom.scss';
 
-function AuthenticatedLayout() {
+function InRoom() {
   return (
     <Suspense fallback="loading">
-      <div className="authenticated-page">
+      <div className="in-room-page">
         <Header isRoomClosed={false} roomId="-NdWHKxtjhM8jI46vEcP" />
-        <main className="authenticated-page__content">
+        <main className="in-room-page__content">
           <Outlet />
         </main>
       </div>
@@ -22,4 +22,4 @@ function AuthenticatedLayout() {
 }
 
 /** Exports */
-export default AuthenticatedLayout;
+export default InRoom;

@@ -8,6 +8,7 @@
 
 /** Managers */
 import { AuthManager } from './manager/auth/AuthManager';
+import { RoomManager } from './manager/room/RoomManager';
 
 /** Utilities */
 import { Utilities, UtilitiesClass } from './utils/Utilities';
@@ -18,12 +19,12 @@ import { Utilities, UtilitiesClass } from './utils/Utilities';
  */
 export class PerguntaUFMGLib {
   auth: AuthManager;
-  room: any;
+  room: RoomManager;
   utils: UtilitiesClass;
 
   constructor() {
     this.auth = new AuthManager();
-    this.room = {};
+    this.room = new RoomManager();
     this.utils = Utilities;
   }
 }

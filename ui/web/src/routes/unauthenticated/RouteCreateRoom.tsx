@@ -3,7 +3,7 @@ import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 /** React components */
-import CreateRoom from '../../components/Unauthenticated/CreateRoom';
+import CreateRoom from '../../components/OutRoom/CreateRoom';
 
 /** Library */
 import Lib from 'pergunta-UFMG-lib';

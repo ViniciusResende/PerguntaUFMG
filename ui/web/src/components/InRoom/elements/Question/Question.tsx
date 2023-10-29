@@ -3,7 +3,7 @@ import React from 'react';
 import cx from 'classnames';
 
 /** Types */
-import { QuestionProps } from '../../ManageRoom/ManageRoom';
+import { QuestionProps } from '../../types';
 
 /** Styles */
 import './Question.scss';
@@ -11,7 +11,8 @@ import './Question.scss';
 /** Assets */
 import { AnonymousIcon } from '../../../../assets/svg/icons';
 
-interface QuestionComponentProps extends Omit<QuestionProps, 'id'> {
+interface QuestionComponentProps
+  extends Omit<QuestionProps, 'id' | 'likeCount'> {
   children?: React.ReactNode;
 }
 

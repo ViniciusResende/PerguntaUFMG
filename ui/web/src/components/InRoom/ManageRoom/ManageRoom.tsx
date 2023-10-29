@@ -5,6 +5,9 @@ import React, { useState } from 'react';
 import Modal from '../../Common/Modal';
 import Question from '../elements/Question';
 
+/** Types */
+import { QuestionProps } from '../types';
+
 /** Styles */
 import './ManageRoom.scss';
 
@@ -15,18 +18,6 @@ import {
   TrashBinIcon,
 } from '../../../assets/svg/icons';
 import { NoQuestionsIllustration } from '../../../assets/svg/illustrations';
-
-export type QuestionProps = {
-  id: string;
-  content: string;
-  author: {
-    name: string;
-    avatar: string;
-  };
-  isAnswered?: boolean;
-  isHighlighted?: boolean;
-  isAnonymous?: boolean;
-};
 
 type ManageRoomProps = {
   questions: QuestionProps[];

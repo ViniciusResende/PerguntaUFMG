@@ -5,11 +5,11 @@ import { Route } from 'react-router-dom';
 import InRoomLayout from '../../components/Layout/InRoom';
 
 /** Route elements */
-import RouteManageRoom from './RouteManageRoom';
+import RouteRoom from './RouteRoom';
 
 /** Exports */
 export default (
   <Route path="/rooms/:roomId" element={<InRoomLayout />}>
-    <Route path="/rooms/:roomId/admin" element={<RouteManageRoom />} />
+    <Route index element={<RouteRoom />} />
   </Route>
 );

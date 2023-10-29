@@ -11,6 +11,7 @@ import { IClass, ILibConfiguration } from '../data/interfaces/CommonInterfaces';
 
 /** Classes */
 import { PubSub } from './classes/pubsub/PubSub';
+import { Security, SecurityClass } from './classes/security/Security';
 
 /** Services */
 import { Logging } from './services/logging/Logging';
@@ -23,17 +24,19 @@ class Utilities extends PubSub {
   #config: ILibConfiguration;
 
   EVENTS: typeof UtilitiesEvents;
-  pubSub: IClass<PubSub>;
   logging: Logging;
   notification: Notification;
+  pubSub: IClass<PubSub>;
+  security: SecurityClass;
 
   constructor() {
     super();
     this.#config = {};
     this.EVENTS = UtilitiesEvents;
-    this.pubSub = PubSub;
     this.logging = new Logging();
     this.notification = new Notification();
+    this.pubSub = PubSub;
+    this.security = Security;
   }
 
   /**

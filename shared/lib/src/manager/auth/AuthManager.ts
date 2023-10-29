@@ -25,12 +25,10 @@ import { Utilities } from '../../utils/Utilities';
  */
 export class AuthManager extends Utilities.pubSub {
   #authAccess: AuthAccess;
-  #authenticatedUser: IUserInfoBody | null;
 
   constructor() {
     super();
     this.#authAccess = new AuthAccess();
-    this.#authenticatedUser = null;
   }
 
   /**
@@ -49,15 +47,17 @@ export class AuthManager extends Utilities.pubSub {
         );
       }
 
-      this.#authenticatedUser = {
+      Utilities.security.user = {
         id: authenticatedUser.id,
         name: authenticatedUser.name,
         profile: authenticatedUser.profile,
       };
 
-      return this.#authenticatedUser;
+      return authenticatedUser;
     } catch (err: unknown) {
       const error = err as AuthManagerError;
+
+      Utilities.logging.error(error.message, error.stack);
 
       Utilities.notification.push(
         error.name,
@@ -76,7 +76,7 @@ export class AuthManager extends Utilities.pubSub {
    * @returns The authenticated user data or null if not authenticated.
    */
   get authenticatedUser(): IUserInfoBody | null {
-    return this.#authenticatedUser;
+    return Utilities.security.user;
   }
 
   /**
@@ -85,6 +85,6 @@ export class AuthManager extends Utilities.pubSub {
   async signOut(): Promise<void> {
     await this.#authAccess.signOut();
 
-    this.#authenticatedUser = null;
+    Utilities.security.excludeAuthenticatedUser();
   }
 }

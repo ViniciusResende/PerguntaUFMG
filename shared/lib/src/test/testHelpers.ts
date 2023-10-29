@@ -6,15 +6,25 @@
 import 'whatwg-fetch';
 
 /** Utilities */
-// import { Utilities } from '../utils/Utilities';
+import { Utilities } from '../utils/Utilities';
 
 /**
  * Utility services' implementation
  */
 beforeAll(() => {
-  // Utilities.setConfiguration({
-  //   To be Done,
-  // });
+  const libConfiguration = {
+    apiConfigObject: {
+      apiKey: '',
+      authDomain: '',
+      databaseURL: '',
+      projectId: '',
+      storageBucket: '',
+      messagingSenderId: '',
+      appId: '',
+    },
+  };
+
+  Utilities.setConfiguration(libConfiguration);
 });
 
 /**

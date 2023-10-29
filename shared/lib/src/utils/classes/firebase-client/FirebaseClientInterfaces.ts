@@ -10,7 +10,16 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
-import { Database, ref, onValue, push, set } from 'firebase/database';
+import {
+  Database,
+  get,
+  ref,
+  remove,
+  onValue,
+  push,
+  set,
+  update,
+} from 'firebase/database';
 
 /**
  * Interface of the Firebase Client module that handles the authentication.
@@ -48,9 +57,12 @@ export interface IFirebaseClientConfig {
  * Interface of the Firebase Client module that handles the database.
  */
 export interface IFirebaseDatabaseModule {
+  get: typeof get;
   db: Database;
   ref: typeof ref;
+  remove: typeof remove;
   onValue: typeof onValue;
   push: typeof push;
   set: typeof set;
+  update: typeof update;
 }

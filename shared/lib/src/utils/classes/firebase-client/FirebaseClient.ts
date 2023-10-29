@@ -11,7 +11,16 @@ import {
   signInWithPopup,
   signOut,
 } from 'firebase/auth';
-import { getDatabase, ref, onValue, push, set } from 'firebase/database';
+import {
+  get,
+  getDatabase,
+  ref,
+  remove,
+  onValue,
+  push,
+  set,
+  update,
+} from 'firebase/database';
 
 /** Utilities */
 import { Utilities } from '../../Utilities';
@@ -48,10 +57,13 @@ export class FirebaseClient {
     };
     this.#databaseModule = {
       db: getDatabase(),
+      get: get,
       ref: ref,
+      remove: remove,
       onValue: onValue,
       push: push,
       set: set,
+      update: update,
     };
   }
 
@@ -62,7 +74,7 @@ export class FirebaseClient {
    *
    * @throws FirebaseClientError
    */
-  async authenticate(): Promise<FirebaseClientAuthResponse | undefined> {
+  public async authenticate(): Promise<FirebaseClientAuthResponse | undefined> {
     const { auth, authProvider, signIn } = this.#authModule;
 
     try {
@@ -86,7 +98,7 @@ export class FirebaseClient {
    *
    * @throws FirebaseClientError
    */
-  async signOut(): Promise<void> {
+  public async signOut(): Promise<void> {
     const { auth, signOut } = this.#authModule;
 
     try {
@@ -97,17 +109,74 @@ export class FirebaseClient {
   }
 
   /**
+   * Fetch data from the Firebase realtime database.
+   * @param path - Firebase realtime database reference path
+   * @returns Data fetched from the database
+   */
+  public async fetchData(path: string): Promise<unknown> {
+    const { db, get, ref } = this.#databaseModule;
+
+    try {
+      const snapshot = await get(ref(db, path));
+
+      if (snapshot.exists()) return snapshot.val();
+      else throw new FirebaseClientError('No data available on this path');
+    } catch (error) {
+      Utilities.logging.error(error);
+    }
+  }
+
+  /**
    * Write data to the Firebase realtime database.
    * @param path - Firebase realtime database reference path
    * @param data - Data to be written to the database
-   *
-   * @throws FirebaseClientError
+   * @returns The key of the new element added to the database
    */
-  async writeData(path: string, data: unknown): Promise<void> {
-    const { db, ref, set } = this.#databaseModule;
+  public async writeData(path: string, data: unknown): Promise<string> {
+    const { db, ref, set, push } = this.#databaseModule;
 
     try {
-      await set(ref(db, path), data);
+      const { key: newElementKey, ref: newElementRef } = push(ref(db, path));
+      await set(newElementRef, data);
+
+      return newElementKey ?? '';
+    } catch (error) {
+      Utilities.logging.error(error);
+      throw new FirebaseClientError('Error writing data to the database');
+    }
+  }
+
+  /**
+   * Update data to the Firebase realtime database.
+   * @param path - Firebase realtime database reference path
+   * @param data - Data to be written to the database
+   */
+  public async updateData(path: string, data: object): Promise<void> {
+    const { db, ref, update } = this.#databaseModule;
+    await update(ref(db, path), data);
+  }
+
+  /**
+   * This method is used to delete data from the Firebase realtime database.
+   * @param path - Firebase realtime database reference path
+   */
+  public async deleteData(path: string): Promise<void> {
+    const { db, ref, remove } = this.#databaseModule;
+
+    try {
+      await remove(ref(db, path));
+    } catch (error) {
+      Utilities.logging.error(error);
+    }
+  }
+
+  public onDataChange(path: string, callback: (data: unknown) => void) {
+    const { db, ref, onValue } = this.#databaseModule;
+
+    try {
+      onValue(ref(db, path), (snapshot) => {
+        callback(snapshot.val());
+      });
     } catch (error) {
       Utilities.logging.error(error);
     }

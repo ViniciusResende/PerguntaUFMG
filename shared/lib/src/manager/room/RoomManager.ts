@@ -69,7 +69,7 @@ export class RoomManager extends PubSub {
    * Updates the room metadata.
    * @param data - Data used to update the metadata of the room
    */
-  private updateRoomMetadata(data: IRoom): void {
+  private updateRoomMetadata(data: Partial<IRoom>): void {
     this.#roomMetadata = {
       authorId: data.authorId,
       endedAt: data.endedAt,
@@ -193,6 +193,12 @@ export class RoomManager extends PubSub {
   public async endRoom(): Promise<void> {
     try {
       await this.#roomEngine.endRoom();
+
+      this.updateRoomMetadata({
+        id: this.#roomMetadata?.id as string,
+        authorId: this.#roomMetadata?.authorId as string,
+        endedAt: new Date().toISOString(),
+      });
 
       Utilities.notification.push(
         'authenticated',

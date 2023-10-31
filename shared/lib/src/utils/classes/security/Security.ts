@@ -5,15 +5,14 @@
 
 /** Classes */
 import { PubSub } from '../pubsub/PubSub';
-
-/** Types */
-import { GenericCallbackFunction } from '../../../data/types/CommonTypes';
+import { LocalStorage } from '../local-storage/LocalStorage';
 
 /** Interfaces */
 import { ILibGeneralErrorPayload } from '../../../data/interfaces/CommonInterfaces';
 import { IUserInfoBody } from '../../../data/interfaces/UserInterfaces';
 
 /** Enums */
+import { LocalStorageKeysEnum } from '../local-storage/LocalStorageEnums';
 import { SecurityEvents } from './SecurityEnums';
 
 /**
@@ -21,13 +20,44 @@ import { SecurityEvents } from './SecurityEnums';
  */
 class Security extends PubSub {
   EVENTS: typeof SecurityEvents;
-  #user: IUserInfoBody | null;
+  #localStorage: LocalStorage;
 
   constructor() {
     super();
 
     this.EVENTS = SecurityEvents;
-    this.#user = null;
+    this.#localStorage = new LocalStorage();
+  }
+
+  private getPersistedUser(): IUserInfoBody | null {
+    const stringifiedUser = this.#localStorage.getLocalStorageItem(
+      LocalStorageKeysEnum.USER_DATA
+    );
+
+    if (!stringifiedUser) return null;
+
+    return JSON.parse(stringifiedUser) as IUserInfoBody;
+  }
+
+  /**
+   * Private method responsible for storing user data in the local storage.
+   *
+   * @param user - User data to be stored
+   */
+  private persistUser(user: IUserInfoBody) {
+    this.#localStorage.setLocalStorageItem(
+      LocalStorageKeysEnum.USER_DATA,
+      JSON.stringify(user)
+    );
+  }
+
+  /**
+   * Private method responsible for removing the stored user data in the local
+   * storage.
+   *
+   */
+  private removeUser() {
+    this.#localStorage.removeLocalStorageItem(LocalStorageKeysEnum.USER_DATA);
   }
 
   /**
@@ -39,7 +69,7 @@ class Security extends PubSub {
    * @fires SecurityEvents.NO_AUTH_USER_STORED
    */
   get user(): IUserInfoBody | null {
-    const authUser = this.#user;
+    const authUser = this.getPersistedUser();
 
     if (authUser) return authUser;
 
@@ -56,8 +86,8 @@ class Security extends PubSub {
    * @fires SecurityEvents.NEW_USER_AUTH
    */
   set user(user: IUserInfoBody) {
-    this.#user = user;
-    this.publish(SecurityEvents.NEW_USER_AUTH, this.#user);
+    this.persistUser(user);
+    this.publish(SecurityEvents.NEW_USER_AUTH, user);
   }
 
   /**
@@ -67,7 +97,7 @@ class Security extends PubSub {
    * @fires SecurityEvents.EXCLUDE_AUTH_USER
    */
   public excludeAuthenticatedUser(): void {
-    this.#user = null;
+    this.removeUser();
     this.publish(SecurityEvents.EXCLUDE_AUTH_USER, null);
   }
 
@@ -79,29 +109,6 @@ class Security extends PubSub {
    */
   public publishApiRequestUnauthorized(errorPayload: ILibGeneralErrorPayload) {
     this.publish(SecurityEvents.API_REQUEST_UNAUTHORIZED, errorPayload);
-  }
-
-  /**
-   * Method responsible for subscribing a callback function to all security class
-   * fail authentication events
-   *
-   * @param callback - The callback function to be executed in case of authentication
-   * fail event dispatch.
-   */
-  public subscribeSecurityFailEvents(callback: GenericCallbackFunction) {
-    this.subscribe(SecurityEvents.API_REQUEST_UNAUTHORIZED, callback);
-    this.subscribe(SecurityEvents.NO_AUTH_USER_STORED, callback);
-  }
-
-  /**
-   * Method responsible for unsubscribing a callback function to all security class
-   * fail authentication events
-   *
-   * @param callback - The subscribe callback function to be unsubscribed.
-   */
-  public unsubscribeSecurityFailEvents(callback: GenericCallbackFunction) {
-    this.unsubscribe(SecurityEvents.API_REQUEST_UNAUTHORIZED, callback);
-    this.unsubscribe(SecurityEvents.NO_AUTH_USER_STORED, callback);
   }
 }
 

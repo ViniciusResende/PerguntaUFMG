@@ -5,13 +5,6 @@ import { useNavigate } from 'react-router-dom';
 /** React components */
 import EnterRoom from '../../components/OutRoom/EnterRoom';
 
-/** Library */
-import Lib from 'pergunta-UFMG-lib';
-
-/** Helpers */
-
-/** Enums */
-
 function RouteEnterRoom() {
   const navigator = useNavigate();
 
@@ -19,7 +12,16 @@ function RouteEnterRoom() {
     navigator('/rooms/new');
   }
 
-  return <EnterRoom createRoomRedirect={createRoomRedirect} />;
+  function enterRoomRedirect(roomCode: string) {
+    navigator(`/rooms/${roomCode}`);
+  }
+
+  return (
+    <EnterRoom
+      createRoomRedirect={createRoomRedirect}
+      enterRoomRedirect={enterRoomRedirect}
+    />
+  );
 }
 
 /** Exports */

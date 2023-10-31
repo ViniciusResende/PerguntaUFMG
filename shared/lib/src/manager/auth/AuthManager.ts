@@ -6,6 +6,9 @@
 /** Accesses */
 import { AuthAccess } from '../../access/auth/AuthAccess';
 
+/** Classes */
+import { PubSub } from '../../utils/classes/pubsub/PubSub';
+
 /** Errors */
 import {
   AuthManagerError,
@@ -23,7 +26,7 @@ import { Utilities } from '../../utils/Utilities';
  * Class to handle business logic related to the authentication at any level
  * of the application
  */
-export class AuthManager extends Utilities.pubSub {
+export class AuthManager extends PubSub {
   #authAccess: AuthAccess;
 
   constructor() {
@@ -52,6 +55,16 @@ export class AuthManager extends Utilities.pubSub {
         name: authenticatedUser.name,
         profile: authenticatedUser.profile,
       };
+
+      Utilities.notification.push(
+        'authenticated',
+        Utilities.notification.TYPE.TOAST,
+        Utilities.notification.STATUS.SUCCESS,
+        {
+          title: 'Autenticado com Sucesso',
+          content: 'Autenticação realizada com sucesso!',
+        }
+      );
 
       return authenticatedUser;
     } catch (err: unknown) {
@@ -86,5 +99,15 @@ export class AuthManager extends Utilities.pubSub {
     await this.#authAccess.signOut();
 
     Utilities.security.excludeAuthenticatedUser();
+
+    Utilities.notification.push(
+      'authenticated',
+      Utilities.notification.TYPE.TOAST,
+      Utilities.notification.STATUS.SUCCESS,
+      {
+        title: 'Deslogado com Sucesso',
+        content: 'Você foi deslogado com sucesso!',
+      }
+    );
   }
 }

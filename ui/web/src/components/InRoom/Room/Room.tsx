@@ -55,98 +55,100 @@ function Room({
         {questions.length > 0 && <span>{questions.length} pergunta(s)</span>}
       </div>
 
-      {!roomClosed && (
-        <form
-          className="room-page__question-submit"
-          onSubmit={handleSendQuestion}
-        >
-          <textarea
-            placeholder="O que você quer perguntar?"
-            onChange={(event) => {
-              setNewQuestion(event.target.value);
-            }}
-            value={newQuestion}
-          />
-
-          <label htmlFor="anonymous" className="checkbox-container">
-            <Checkbox
-              id="anonymous"
-              name="anonymous"
-              value="anonymous"
-              onClick={() => {
-                setIsAnonymous((prev) => !prev);
+      <div className="room-page__content">
+        {!roomClosed && (
+          <form
+            className="room-page__question-submit"
+            onSubmit={handleSendQuestion}
+          >
+            <textarea
+              placeholder="O que você quer perguntar?"
+              onChange={(event) => {
+                setNewQuestion(event.target.value);
               }}
-              checked={isAnonymous}
+              value={newQuestion}
             />
-            <p>Pergunta anônima?</p>
-          </label>
 
-          <div className="form-footer">
-            {user ? (
-              <div className="user-info">
-                <img src={user.profile} alt={user.name} />
-                <span>{user.name}</span>
-              </div>
-            ) : (
-              <span>
-                Para enviar uma pergunta,{' '}
-                <button onClick={logIn} type="button">
-                  faça seu login
-                </button>
-                .
-              </span>
-            )}
-            <Button
-              modifier="default"
-              type="submit"
-              disabled={!user || !newQuestion}
-            >
-              Enviar Pergunta
-            </Button>
-          </div>
-        </form>
-      )}
-      <div className="room-page__questions">
-        {questions.length === 0 ? (
-          <div className="room-page__no-questions">
-            <NoQuestionsIllustration />
-            <strong>Nenhuma pergunta por aqui...</strong>
-            <span>
-              Envie o código desta sala para seus amigos e comece a fazer
-              perguntas!
-            </span>
-          </div>
-        ) : (
-          <>
-            {questions.map((question) => (
-              <Question
-                key={question.id}
-                author={question.author}
-                content={question.content}
-                isAnswered={question.isAnswered}
-                isHighlighted={question.isHighlighted}
-                isAnonymous={question.isAnonymous}
-                likeId={question.likeId}
-              >
-                {!question.isAnswered && (
-                  <button
-                    className={cx('like-button', { liked: question.likeId })}
-                    type="button"
-                    aria-label="Marcar como gostei"
-                    onClick={() =>
-                      toggleQuestionLike(question.id, question.likeId)
-                    }
-                  >
-                    {question.likesCount > 0 && (
-                      <span>{question.likesCount}</span>
-                    )}
-                    <LikeIcon />
+            <label htmlFor="anonymous" className="checkbox-container">
+              <Checkbox
+                id="anonymous"
+                name="anonymous"
+                value="anonymous"
+                onClick={() => {
+                  setIsAnonymous((prev) => !prev);
+                }}
+                checked={isAnonymous}
+              />
+              <p>Pergunta anônima?</p>
+            </label>
+
+            <div className="form-footer">
+              {user ? (
+                <div className="user-info">
+                  <img src={user.profile} alt={user.name} />
+                  <span>{user.name}</span>
+                </div>
+              ) : (
+                <span>
+                  Para enviar uma pergunta,{' '}
+                  <button onClick={logIn} type="button">
+                    faça seu login
                   </button>
-                )}
-              </Question>
-            ))}
-          </>
+                  .
+                </span>
+              )}
+              <Button
+                modifier="default"
+                type="submit"
+                disabled={!user || !newQuestion}
+              >
+                Enviar Pergunta
+              </Button>
+            </div>
+          </form>
         )}
+        <div className="room-page__questions">
+          {questions.length === 0 ? (
+            <div className="room-page__no-questions">
+              <NoQuestionsIllustration />
+              <strong>Nenhuma pergunta por aqui...</strong>
+              <span>
+                Envie o código desta sala para seus amigos e comece a fazer
+                perguntas!
+              </span>
+            </div>
+          ) : (
+            <>
+              {questions.map((question) => (
+                <Question
+                  key={question.id}
+                  author={question.author}
+                  content={question.content}
+                  isAnswered={question.isAnswered}
+                  isHighlighted={question.isHighlighted}
+                  isAnonymous={question.isAnonymous}
+                  likeId={question.likeId}
+                >
+                  {!question.isAnswered && (
+                    <button
+                      className={cx('like-button', { liked: question.likeId })}
+                      type="button"
+                      aria-label="Marcar como gostei"
+                      onClick={() =>
+                        toggleQuestionLike(question.id, question.likeId)
+                      }
+                    >
+                      {question.likesCount > 0 && (
+                        <span>{question.likesCount}</span>
+                      )}
+                      <LikeIcon />
+                    </button>
+                  )}
+                </Question>
+              ))}
+            </>
+          )}
+        </div>
       </div>
     </main>
   );

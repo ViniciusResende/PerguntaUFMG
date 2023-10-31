@@ -1,5 +1,8 @@
 /** Library */
-import Lib, { ILibConfiguration } from 'pergunta-UFMG-lib';
+import Lib, {
+  ILibConfiguration,
+  LibNotificationTypeEnum,
+} from 'pergunta-UFMG-lib';
 
 const libConfiguration: ILibConfiguration = {
   apiConfigObject: {
@@ -11,6 +14,7 @@ const libConfiguration: ILibConfiguration = {
     messagingSenderId: process.env.FIREBASE_MESSAGING_SENDER_ID,
     appId: process.env.FIREBASE_APP_ID,
   },
+  notificationService: LibNotificationTypeEnum.WEB,
 };
 
 Lib.utils.setConfiguration(libConfiguration);

@@ -2,6 +2,9 @@
 import { Suspense } from 'react';
 import { Outlet } from 'react-router-dom';
 
+/** React Components */
+import Toast from '../../Common/Toast';
+
 /** Styles */
 import './OutRoom.scss';
 
@@ -26,6 +29,7 @@ function OutRoom() {
         <main className="out-room-page__content">
           <LogoFull />
           <Outlet />
+          <Toast />
         </main>
       </div>
     </Suspense>

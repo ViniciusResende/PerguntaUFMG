@@ -13,12 +13,20 @@ import { GoogleLogoIcon, LogInIcon } from '../../../assets/svg/icons';
 
 type EnterRoomProps = {
   createRoomRedirect: () => void;
+  enterRoomRedirect: (roomCode: string) => void;
 };
 
-function EnterRoom({ createRoomRedirect }: EnterRoomProps) {
+function EnterRoom({ createRoomRedirect, enterRoomRedirect }: EnterRoomProps) {
+  function handleEnterRoom(event: React.FormEvent<HTMLFormElement>) {
+    event.preventDefault();
+
+    const roomId = event.currentTarget.roomId.value as string;
+    enterRoomRedirect(roomId);
+  }
+
   return (
     <section className="enter-room-page__form-container">
-      <form onSubmit={() => {}}>
+      <form onSubmit={handleEnterRoom}>
         <Button
           icon={<GoogleLogoIcon />}
           modifier="outlined"
@@ -35,12 +43,7 @@ function EnterRoom({ createRoomRedirect }: EnterRoomProps) {
             inputLabel="Digite o código da sala"
             name="roomId"
           />
-          <Button
-            icon={<LogInIcon />}
-            modifier="default"
-            onClick={() => {}}
-            type="submit"
-          >
+          <Button icon={<LogInIcon />} modifier="default" type="submit">
             Entrar na sala
           </Button>
         </div>

@@ -58,5 +58,12 @@
   &.disabled {
     background-color: lighten($fontColor, 15%);
     cursor: default;
+    pointer-events: none;
+
+    &.outlined {
+      background-color: darken($white, 10%);
+      border: 1px solid $supportDark;
+      color: $fontColor;
+    }
   }
 }

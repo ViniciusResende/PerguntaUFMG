@@ -89,10 +89,15 @@ export class RoomEngine {
       if (!this.#roomMetadata?.id)
         throw new RoomEngineError('No room selected to delete question at.');
 
-      if (this.#roomMetadata.authorId !== Utilities.security.user?.id)
-        throw new RoomEngineError(
-          'Only the room author can delete a question.'
-        );
+      if (this.#roomMetadata.authorId !== Utilities.security.user?.id) {
+        const errorMessage = 'Only the room author can delete a question.';
+        Utilities.security.publishApiRequestUnauthorized({
+          errorCode: 401,
+          errorMessage,
+        });
+
+        throw new RoomEngineError(errorMessage);
+      }
 
       await this.#roomAccess.delete(
         RoomActionTypeEnum.QUESTION,
@@ -119,10 +124,15 @@ export class RoomEngine {
     try {
       const requesterId = Utilities.security.user?.id;
 
-      if (!requesterId)
-        throw new RoomEngineError(
-          'User is not authenticated to dislike a question.'
-        );
+      if (!requesterId) {
+        const errorMessage = 'User is not authenticated to dislike a question.';
+        Utilities.security.publishApiRequestUnauthorized({
+          errorCode: 401,
+          errorMessage,
+        });
+
+        throw new RoomEngineError(errorMessage);
+      }
 
       if (!this.#roomMetadata?.id)
         throw new RoomEngineError('No room selected to dislike question at.');
@@ -149,8 +159,15 @@ export class RoomEngine {
       if (!this.#roomMetadata?.id)
         throw new RoomEngineError('No room selected to end.');
 
-      if (this.#roomMetadata.authorId !== Utilities.security.user?.id)
-        throw new RoomEngineError('Only the room author can end a room.');
+      if (this.#roomMetadata.authorId !== Utilities.security.user?.id) {
+        const errorMessage = 'Only the room author can end a room.';
+        Utilities.security.publishApiRequestUnauthorized({
+          errorCode: 401,
+          errorMessage,
+        });
+
+        throw new RoomEngineError(errorMessage);
+      }
 
       await this.#roomAccess.delete(
         RoomActionTypeEnum.ROOM,
@@ -204,10 +221,15 @@ export class RoomEngine {
     try {
       const requesterId = Utilities.security.user?.id;
 
-      if (!requesterId)
-        throw new RoomEngineError(
-          'User is not authenticated to like a question.'
-        );
+      if (!requesterId) {
+        const errorMessage = 'User is not authenticated to like a question.';
+        Utilities.security.publishApiRequestUnauthorized({
+          errorCode: 401,
+          errorMessage,
+        });
+
+        throw new RoomEngineError(errorMessage);
+      }
 
       if (!this.#roomMetadata?.id)
         throw new RoomEngineError('No room selected to like question at.');
@@ -239,10 +261,15 @@ export class RoomEngine {
       if (!this.#roomMetadata?.id)
         throw new RoomEngineError('No room selected to delete question at.');
 
-      if (this.#roomMetadata.authorId !== Utilities.security.user?.id)
-        throw new RoomEngineError(
-          'Only the room author can update a question.'
-        );
+      if (this.#roomMetadata.authorId !== Utilities.security.user?.id) {
+        const errorMessage = 'Only the room author can update a question.';
+        Utilities.security.publishApiRequestUnauthorized({
+          errorCode: 401,
+          errorMessage,
+        });
+
+        throw new RoomEngineError(errorMessage);
+      }
 
       await this.#roomAccess.update(
         RoomActionTypeEnum.QUESTION,
@@ -270,7 +297,8 @@ export class RoomEngine {
       this.#roomAccess.subscribeToChanges(
         RoomActionTypeEnum.ROOM,
         (data: unknown) => callback(data as IRoom),
-        this.#roomMetadata.id
+        this.#roomMetadata.id,
+        Utilities.security.user?.id ?? ''
       );
     } catch (err: unknown) {
       const error = err as RoomEngineError;

@@ -3,7 +3,10 @@
  * @module RoomManager
  */
 
-/** Accesses */
+/** Classes */
+import { PubSub } from '../../utils/classes/pubsub/PubSub';
+
+/** Engines */
 import { RoomEngine } from '../../engine/room/RoomEngine';
 
 /** Enums */
@@ -23,14 +26,18 @@ import { Utilities } from '../../utils/Utilities';
  * Class to handle business logic related to the room entity at any level
  * of the application
  */
-export class RoomManager extends Utilities.pubSub {
+export class RoomManager extends PubSub {
+  EVENTS: typeof RoomEvents;
   #roomEngine: RoomEngine;
   #roomMetadata: Partial<IRoom> | null;
 
   constructor() {
     super();
+    this.EVENTS = RoomEvents;
     this.#roomEngine = new RoomEngine();
     this.#roomMetadata = null;
+
+    this.onRoomUpdate = this.onRoomUpdate.bind(this);
   }
 
   /**
@@ -38,8 +45,14 @@ export class RoomManager extends Utilities.pubSub {
    */
   private addEventListeners(): void {
     if (!this.#roomMetadata) return;
+    const subscribeToRoomChanges = () =>
+      this.#roomEngine.subscribeToRoomChanges(this.onRoomUpdate);
 
-    this.#roomEngine.subscribeToRoomChanges(this.onRoomUpdate);
+    Utilities.security.subscribe(
+      Utilities.security.EVENTS.NEW_USER_AUTH,
+      subscribeToRoomChanges
+    );
+    subscribeToRoomChanges();
   }
 
   /**
@@ -59,10 +72,12 @@ export class RoomManager extends Utilities.pubSub {
   private updateRoomMetadata(data: IRoom): void {
     this.#roomMetadata = {
       authorId: data.authorId,
+      endedAt: data.endedAt,
       id: data.id,
     };
 
     this.addEventListeners();
+    this.publish(RoomEvents.ROOM_METADATA_CHANGED, this.#roomMetadata);
   }
 
   /**
@@ -85,17 +100,26 @@ export class RoomManager extends Utilities.pubSub {
   }
 
   /**
-   * Creates a new room and joins it, subscribing to room changes events.
+   * Creates a new room.
    * @param data - Data used to create a new room
-   * @returns The data of the new room created.
+   * @returns The if of the new room created.
    */
-  public async createRoom(data: ICreateRoomData): Promise<IRoom> {
+  public async createRoom(data: ICreateRoomData): Promise<string> {
     try {
       const newRoomId = await this.#roomEngine.createRoom(data);
 
-      const roomData = this.joinRoom(newRoomId);
+      Utilities.notification.push(
+        'authenticated',
+        Utilities.notification.TYPE.TOAST,
+        Utilities.notification.STATUS.SUCCESS,
+        {
+          title: 'Sala criada com Sucesso',
+          content:
+            'Sua sala foi criada com sucesso! Copie o código e compartilhe com os participantes!',
+        }
+      );
 
-      return roomData;
+      return newRoomId;
     } catch (err: unknown) {
       const error = err as Error;
 
@@ -116,6 +140,17 @@ export class RoomManager extends Utilities.pubSub {
   public async deleteQuestion(questionId: string): Promise<void> {
     try {
       await this.#roomEngine.deleteQuestion(questionId);
+
+      Utilities.notification.push(
+        'authenticated',
+        Utilities.notification.TYPE.TOAST,
+        Utilities.notification.STATUS.SUCCESS,
+        {
+          title: 'Pergunta apagada com sucesso',
+          content:
+            'A pergunta foi apagada e já não é mais visível pelos participantes.',
+        }
+      );
     } catch (err: unknown) {
       const error = err as Error;
 
@@ -158,6 +193,17 @@ export class RoomManager extends Utilities.pubSub {
   public async endRoom(): Promise<void> {
     try {
       await this.#roomEngine.endRoom();
+
+      Utilities.notification.push(
+        'authenticated',
+        Utilities.notification.TYPE.TOAST,
+        Utilities.notification.STATUS.SUCCESS,
+        {
+          title: 'Sala encerrada com sucesso',
+          content:
+            'A sala foi encerrada com sucesso, esperamos que tenha tido uma boa experiência.',
+        }
+      );
     } catch (err: unknown) {
       const error = err as Error;
 
@@ -249,6 +295,17 @@ export class RoomManager extends Utilities.pubSub {
   public async sendQuestion(data: ICreateQuestionData): Promise<void> {
     try {
       await this.#roomEngine.createQuestion(data);
+
+      Utilities.notification.push(
+        'authenticated',
+        Utilities.notification.TYPE.TOAST,
+        Utilities.notification.STATUS.SUCCESS,
+        {
+          title: 'Pergunta enviada com sucesso',
+          content:
+            'A sua pergunta foi enviada e já está visível para todos os paricipantes.',
+        }
+      );
     } catch (err: unknown) {
       const error = err as Error;
 

@@ -57,10 +57,23 @@ export class ApiPer {
       })
     );
 
+    const sortQuestionsHelper = (
+      questionA: (typeof parsedQuestions)[0],
+      questionB: (typeof parsedQuestions)[0]
+    ) => {
+      if (questionA.isAnswered) return 1;
+      if (questionB.isAnswered) return -1;
+
+      if (questionA.isHighlighted) return -1;
+      if (questionB.isHighlighted) return 1;
+
+      return questionB.likesCount - questionA.likesCount;
+    };
+
     return {
       authorId: roomData.authorId,
       id: roomId,
-      questions: parsedQuestions.reverse(),
+      questions: parsedQuestions.sort(sortQuestionsHelper),
       title: roomData.title,
       endedAt: roomData.endedAt,
     };
@@ -147,7 +160,7 @@ export class ApiPer {
     requesterId?: string
   ): Promise<IRoom> {
     const apiClientRoomData = (await this.#apiClient.fetchData(
-      `rooms/${roomCode}/questions/`
+      `rooms/${roomCode}/`
     )) as IApiClientRoomData;
 
     return this.roomDataTransformer(roomCode, apiClientRoomData, requesterId);

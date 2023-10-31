@@ -39,7 +39,7 @@ function InRoom() {
     if (location.pathname.includes('admin')) {
       if (Lib.utils.security.user?.id === roomMetadata.authorId)
         setCanUserCloseRoom(true);
-      else navigator('/room/' + roomId);
+      else navigator('/rooms/' + roomId);
     }
   };
 

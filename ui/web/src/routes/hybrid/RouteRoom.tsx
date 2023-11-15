@@ -1,47 +1,93 @@
 /** React imports */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useParams } from 'react-router-dom';
 
 /** React components */
+import Loader from '../../components/Common/Loader';
 import Room from '../../components/InRoom/Room';
 
+/** React hooks */
+import useSecurity from '../middlewares/useSecurity';
+
 /** Library */
-import Lib from 'pergunta-UFMG-lib';
-
-/** Helpers */
-
-/** Enums */
+import Lib, { IRoom, IUserInfoBody } from 'pergunta-UFMG-lib';
 
 function RouteRoom() {
-  const mockQuestions = [
-    {
-      id: '1',
-      content: 'Primeira Pergunta',
+  useSecurity();
+  const { roomId } = useParams();
+
+  const [room, setRoom] = useState<IRoom | null>(null);
+  const [user, setUser] = useState<IUserInfoBody | null>(
+    Lib.utils.security.user
+  );
+
+  const joinRoom = async () => {
+    const roomData = await Lib.room.joinRoom(roomId ?? '');
+
+    setRoom(roomData);
+  };
+
+  const logIn = async () => {
+    const user = await Lib.auth.auth();
+
+    if (user !== null) setUser(user);
+  };
+
+  const sendQuestion = async (content: string, isAnonymous: boolean) => {
+    const questionData = {
       author: {
-        name: 'Vinícius Alves',
-        avatar:
-          'https://media.istockphoto.com/id/825383494/photo/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=',
+        name: user?.name ?? '',
+        profile: user?.profile ?? '',
       },
-      likeCount: 10,
-      isAnonymous: false,
-      isHighlighted: false,
-      isAnswered: false,
-    },
-  ];
+      content,
+      isAnonymous,
+    };
+
+    await Lib.room.sendQuestion(questionData);
+  };
+
+  const toggleQuestionLike = async (id: string, likeId?: string) => {
+    if (likeId) await Lib.room.dislikeQuestion(id, likeId);
+    else await Lib.room.likeQuestion(id);
+  };
+
+  useEffect(() => {
+    const { NEW_USER_AUTH } = Lib.utils.security.EVENTS;
+
+    Lib.utils.security.subscribe(NEW_USER_AUTH, setUser);
+
+    return function cleanUp() {
+      Lib.utils.security.unsubscribe(NEW_USER_AUTH, setUser);
+    };
+  }, []);
+
+  useEffect(() => {
+    joinRoom();
+
+    const { ROOM_DATA_CHANGED } = Lib.room.EVENTS;
+    Lib.room.subscribe(ROOM_DATA_CHANGED, setRoom);
+
+    return function cleanUp() {
+      Lib.room.unsubscribe(ROOM_DATA_CHANGED, setRoom);
+    };
+  }, [roomId]);
 
   return (
-    <Room
-      questions={mockQuestions}
-      user={{
-        id: '1',
-        name: 'Vinícius Alves',
-        avatar:
-          'https://media.istockphoto.com/id/825383494/photo/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=',
-      }}
-      roomClosed={false}
-      title="Sala React Q&A"
-      sendQuestion={() => {}}
-      toggleQuestionLike={() => {}}
-    />
+    <>
+      {!room ? (
+        <Loader />
+      ) : (
+        <Room
+          questions={room.questions}
+          user={user}
+          roomClosed={!!room.endedAt}
+          title={room.title}
+          logIn={logIn}
+          sendQuestion={sendQuestion}
+          toggleQuestionLike={toggleQuestionLike}
+        />
+      )}
+    </>
   );
 }
 

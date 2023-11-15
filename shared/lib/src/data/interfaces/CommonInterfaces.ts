@@ -3,6 +3,9 @@
  * @module CommonInterfaces
  */
 
+/** Enums */
+import { LibNotificationTypeEnum } from '../enums/CommonEnums';
+
 /**
  * Class interface to be used as type.
  */
@@ -15,6 +18,7 @@ export interface IClass<T> {
  */
 export interface ILibConfiguration {
   apiConfigObject?: unknown;
+  notificationService?: LibNotificationTypeEnum;
 }
 
 /**

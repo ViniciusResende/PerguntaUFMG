@@ -6,6 +6,9 @@
 /** Accesses */
 import { AuthAccess } from '../../access/auth/AuthAccess';
 
+/** Classes */
+import { PubSub } from '../../utils/classes/pubsub/PubSub';
+
 /** Errors */
 import {
   AuthManagerError,
@@ -23,14 +26,12 @@ import { Utilities } from '../../utils/Utilities';
  * Class to handle business logic related to the authentication at any level
  * of the application
  */
-export class AuthManager extends Utilities.pubSub {
+export class AuthManager extends PubSub {
   #authAccess: AuthAccess;
-  #authenticatedUser: IUserInfoBody | null;
 
   constructor() {
     super();
     this.#authAccess = new AuthAccess();
-    this.#authenticatedUser = null;
   }
 
   /**
@@ -49,15 +50,27 @@ export class AuthManager extends Utilities.pubSub {
         );
       }
 
-      this.#authenticatedUser = {
+      Utilities.security.user = {
         id: authenticatedUser.id,
         name: authenticatedUser.name,
         profile: authenticatedUser.profile,
       };
 
-      return this.#authenticatedUser;
+      Utilities.notification.push(
+        'authenticated',
+        Utilities.notification.TYPE.TOAST,
+        Utilities.notification.STATUS.SUCCESS,
+        {
+          title: 'Autenticado com Sucesso',
+          content: 'Autenticação realizada com sucesso!',
+        }
+      );
+
+      return authenticatedUser;
     } catch (err: unknown) {
       const error = err as AuthManagerError;
+
+      Utilities.logging.error(error.message, error.stack);
 
       Utilities.notification.push(
         error.name,
@@ -76,7 +89,7 @@ export class AuthManager extends Utilities.pubSub {
    * @returns The authenticated user data or null if not authenticated.
    */
   get authenticatedUser(): IUserInfoBody | null {
-    return this.#authenticatedUser;
+    return Utilities.security.user;
   }
 
   /**
@@ -85,6 +98,16 @@ export class AuthManager extends Utilities.pubSub {
   async signOut(): Promise<void> {
     await this.#authAccess.signOut();
 
-    this.#authenticatedUser = null;
+    Utilities.security.excludeAuthenticatedUser();
+
+    Utilities.notification.push(
+      'authenticated',
+      Utilities.notification.TYPE.TOAST,
+      Utilities.notification.STATUS.SUCCESS,
+      {
+        title: 'Deslogado com Sucesso',
+        content: 'Você foi deslogado com sucesso!',
+      }
+    );
   }
 }

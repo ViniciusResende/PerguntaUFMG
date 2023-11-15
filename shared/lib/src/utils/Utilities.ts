@@ -11,6 +11,10 @@ import { IClass, ILibConfiguration } from '../data/interfaces/CommonInterfaces';
 
 /** Classes */
 import { PubSub } from './classes/pubsub/PubSub';
+import { Security, SecurityClass } from './classes/security/Security';
+
+/** Mappings */
+import { notificationImplementationTypeMap } from './services/notification/NotificationMapper';
 
 /** Services */
 import { Logging } from './services/logging/Logging';
@@ -23,17 +27,19 @@ class Utilities extends PubSub {
   #config: ILibConfiguration;
 
   EVENTS: typeof UtilitiesEvents;
-  pubSub: IClass<PubSub>;
   logging: Logging;
   notification: Notification;
+  pubSub: IClass<PubSub>;
+  security: SecurityClass;
 
   constructor() {
     super();
     this.#config = {};
     this.EVENTS = UtilitiesEvents;
-    this.pubSub = PubSub;
     this.logging = new Logging();
     this.notification = new Notification();
+    this.pubSub = PubSub;
+    this.security = Security;
   }
 
   /**
@@ -53,6 +59,18 @@ class Utilities extends PubSub {
   setConfiguration(config: ILibConfiguration): void {
     Object.assign(this.#config, config);
     this.publish(UtilitiesEvents.CONFIGURATION_CHANGED, this.configuration);
+
+    const notificationService = this.#config.notificationService;
+    if (notificationService) {
+      const implementation =
+        notificationImplementationTypeMap.get(notificationService);
+
+      if (!implementation)
+        this.logging.warn(
+          `No implementation found for notification service ${notificationService}.`
+        );
+      else this.notification.setImplementation(implementation);
+    }
   }
 
   /**

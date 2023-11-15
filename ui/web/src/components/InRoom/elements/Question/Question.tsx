@@ -3,7 +3,7 @@ import React from 'react';
 import cx from 'classnames';
 
 /** Types */
-import { QuestionProps } from '../../types';
+import { IQuestion } from 'pergunta-UFMG-lib';
 
 /** Styles */
 import './Question.scss';
@@ -11,8 +11,7 @@ import './Question.scss';
 /** Assets */
 import { AnonymousIcon } from '../../../../assets/svg/icons';
 
-interface QuestionComponentProps
-  extends Omit<QuestionProps, 'id' | 'likeCount'> {
+interface QuestionComponentProps extends Omit<IQuestion, 'id' | 'likesCount'> {
   children?: React.ReactNode;
 }
 
@@ -38,7 +37,7 @@ function Question({
           {isAnonymous ? (
             <AnonymousIcon />
           ) : (
-            <img src={author.avatar} alt={author.name} />
+            <img src={author.profile} alt={author.name} />
           )}
           <span>{!isAnonymous ? author.name : 'Autor Anônimo'}</span>
         </div>

@@ -1,53 +1,65 @@
 /** React imports */
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
 /** React components */
+import Loader from '../../components/Common/Loader';
 import ManageRoom from '../../components/InRoom/ManageRoom';
 
 /** Library */
-import Lib from 'pergunta-UFMG-lib';
-
-/** Helpers */
-
-/** Enums */
+import Lib, { IRoom } from 'pergunta-UFMG-lib';
 
 function RouteManageRoom() {
+  const navigator = useNavigate();
+  const { roomId } = useParams();
+
+  const [room, setRoom] = useState<IRoom | null>(null);
+
   function checkQuestion(id: string) {
-    console.log(id);
+    Lib.room.checkQuestionAsAnswered(id);
   }
 
   function deleteQuestion(id: string) {
-    console.log(id);
+    Lib.room.deleteQuestion(id);
   }
 
   function highlightQuestion(id: string) {
-    console.log(id);
+    Lib.room.highlightQuestion(id);
   }
 
-  const mockQuestions = [
-    {
-      id: '1',
-      content: 'Primeira Pergunta',
-      author: {
-        name: 'Vinícius Alves',
-        avatar:
-          'https://media.istockphoto.com/id/825383494/photo/business-man-pushing-large-stone-up-to-hill-business-heavy-tasks-and-problems-concept.jpg?s=612x612&w=0&k=20&c=wtqvbQ6OIHitRVDPTtoT_1HKUAOgyqa7YzzTMXqGRaQ=',
-      },
-      likeCount: 0,
-      isAnonymous: true,
-      isHighlighted: false,
-      isAnswered: true,
-    },
-  ];
+  const joinRoom = async () => {
+    const roomData = await Lib.room.joinRoom(roomId ?? '');
+
+    if (roomData === null) navigator('/');
+
+    setRoom(roomData);
+  };
+
+  useEffect(() => {
+    joinRoom();
+
+    const { ROOM_DATA_CHANGED } = Lib.room.EVENTS;
+    Lib.room.subscribe(ROOM_DATA_CHANGED, setRoom);
+
+    return function cleanUp() {
+      Lib.room.unsubscribe(ROOM_DATA_CHANGED, setRoom);
+    };
+  }, [roomId]);
 
   return (
-    <ManageRoom
-      questions={mockQuestions}
-      title="Sala React Q&A"
-      checkQuestion={checkQuestion}
-      deleteQuestion={deleteQuestion}
-      highlightQuestion={highlightQuestion}
-    />
+    <>
+      {!room ? (
+        <Loader />
+      ) : (
+        <ManageRoom
+          questions={room.questions}
+          title={room.title}
+          checkQuestion={checkQuestion}
+          deleteQuestion={deleteQuestion}
+          highlightQuestion={highlightQuestion}
+        />
+      )}
+    </>
   );
 }
 

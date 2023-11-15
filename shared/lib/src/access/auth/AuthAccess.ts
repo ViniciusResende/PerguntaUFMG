@@ -20,15 +20,15 @@ export class AuthAccess {
   #apiPer: ApiPer | null;
 
   constructor() {
-    this.#apiPer = this.#getApiPerInstance();
-    this.#addEventListeners();
+    this.#apiPer = this.getApiPerInstance();
+    this.addEventListeners();
   }
 
   /**
    * Adds the event listener for configuration changes.
    */
-  #addEventListeners() {
-    const onConfigurationChanged = this.#onConfigurationChanged.bind(this);
+  private addEventListeners() {
+    const onConfigurationChanged = this.onConfigurationChanged.bind(this);
     Utilities.subscribe(
       Utilities.EVENTS.CONFIGURATION_CHANGED,
       onConfigurationChanged
@@ -40,7 +40,7 @@ export class AuthAccess {
    *
    * @returns The ApiPer instance with updated configuration
    */
-  #getApiPerInstance(): ApiPer | null {
+  private getApiPerInstance(): ApiPer | null {
     const { apiConfigObject } = Utilities.configuration;
     const apiPer = doesObjectHaveValue(apiConfigObject)
       ? new ApiPer(apiConfigObject)
@@ -52,8 +52,8 @@ export class AuthAccess {
    * Event handler to deal with configuration changes.
    * It will update the access' ApiPer instance with the new configuration.
    */
-  #onConfigurationChanged() {
-    this.#apiPer = this.#getApiPerInstance();
+  private onConfigurationChanged() {
+    this.#apiPer = this.getApiPerInstance();
   }
 
   /**

@@ -4,6 +4,10 @@
   margin: 0 auto;
   max-width: 50rem;
 
+  @include forSmall() {
+    padding-left: 0.5rem;
+  }
+
   &__room-title {
     align-items: center;
     display: flex;
@@ -23,6 +27,16 @@
       font-weight: 500;
       margin-left: 0.875rem;
       padding: 0.5rem 0.94rem;
+    }
+  }
+
+  &__content {
+    max-height: 75vh;
+    overflow-y: auto;
+    padding-right: 0.75rem;
+
+    @include forXSmall() {
+      max-height: 60vh;
     }
   }
 
@@ -98,6 +112,16 @@
 
       > button {
         max-width: 12.5rem;
+      }
+
+      @include forXSmall() {
+        .user-info {
+          display: none;
+        }
+
+        > button {
+          max-width: unset;
+        }
       }
     }
   }

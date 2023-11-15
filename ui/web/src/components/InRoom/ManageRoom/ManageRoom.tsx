@@ -6,7 +6,7 @@ import Modal from '../../Common/Modal';
 import Question from '../elements/Question';
 
 /** Types */
-import { QuestionProps } from '../types';
+import { IQuestion } from 'pergunta-UFMG-lib';
 
 /** Styles */
 import './ManageRoom.scss';
@@ -20,7 +20,7 @@ import {
 import { NoQuestionsIllustration } from '../../../assets/svg/illustrations';
 
 type ManageRoomProps = {
-  questions: QuestionProps[];
+  questions: IQuestion[];
   title: string;
   checkQuestion: (id: string) => void;
   highlightQuestion: (id: string) => void;
@@ -35,6 +35,11 @@ function ManageRoom({
   deleteQuestion,
 }: ManageRoomProps) {
   const [isDeleteModalOpen, setIsDeleteModalOpen] = useState(false);
+
+  const onConfirmDeletion = (questionId: string) => {
+    deleteQuestion(questionId);
+    setIsDeleteModalOpen(false);
+  };
 
   return (
     <main className="manage-room-page">
@@ -62,6 +67,7 @@ function ManageRoom({
                 isAnswered={question.isAnswered}
                 isHighlighted={question.isHighlighted}
                 isAnonymous={question.isAnonymous}
+                likeId={question.likeId}
               >
                 {!question.isAnswered && (
                   <>
@@ -93,7 +99,7 @@ function ManageRoom({
                   icon={<TrashBinIcon />}
                   title="Excluir pergunta"
                   message="Tem certeza que você deseja excluir essa pergunta?"
-                  onConfirm={() => deleteQuestion(question.id)}
+                  onConfirm={() => onConfirmDeletion(question.id)}
                   onCancel={() => setIsDeleteModalOpen(false)}
                 />
               </Question>

@@ -4,6 +4,7 @@
     "cspell": "cspell \"**/src/**\" --gitignore --no-progress --no-summary",
     "sast": "semgrep --disable-version-check --error --config \"p/react\"",
     "build": "(yarn); (cd ui/web && yarn build)",
+    "test": "cd shared/lib && yarn test && cd ../..",
     "verify": "yarn -v",
     "verify_old": "(yarn cspell) && (cd shared/lib && yarn verify) && (yarn sast ./)",
     "postinstall": "(husky install); (cd shared/lib && yarn); (cd ui/web && yarn);"
